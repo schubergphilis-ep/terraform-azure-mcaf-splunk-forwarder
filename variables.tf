@@ -65,16 +65,15 @@ variable "key_vault" {
   default = null
 }
 
-variable "key_vault_secret_datadog_apikey_name" {
+variable "key_vault_secret_splunk_hec_token_name" {
   type        = string
-  description = "The name of the Key Vault secret containing the DataDog API key"
-  default     = "datadog-api-key"
+  description = "The name of the Key Vault secret containing the Splunk HEC token"
+  default     = "splunk-hec-token"
 }
 
-variable "datadog_site_hostname" {
-  description = "Datadog site host name"
+variable "splunk_hec_url" {
+  description = "Splunk HEC endpoint"
   type        = string
-  default     = "datadoghq.eu"
 }
 
 variable "key_vault_secret_cmk_key_name" {

@@ -1,4 +1,4 @@
-resource "azurerm_user_assigned_identity" "func_datadog_mid" {
+resource "azurerm_user_assigned_identity" "func_splunk_mid" {
   name                = format("${var.managed_identity_name}%s", "-func")
   resource_group_name = var.resource_group_name
   location            = var.location
@@ -10,50 +10,50 @@ resource "azurerm_user_assigned_identity" "func_datadog_mid" {
   )
 }
 
-resource "azurerm_role_assignment" "func_datadog_mid_sta_blob" {
-  principal_id                     = azurerm_user_assigned_identity.func_datadog_mid.principal_id
+resource "azurerm_role_assignment" "func_splunk_mid_sta_blob" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
   scope                            = module.storage_account.id
   role_definition_name             = "Storage Blob Data Contributor"
   skip_service_principal_aad_check = false
 }
 
-resource "azurerm_role_assignment" "func_datadog_mid_sta_file" {
-  principal_id                     = azurerm_user_assigned_identity.func_datadog_mid.principal_id
+resource "azurerm_role_assignment" "func_splunk_mid_sta_file" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
   scope                            = module.storage_account.id
   role_definition_name             = "Storage File Data Privileged Contributor"
   skip_service_principal_aad_check = false
 }
 
-resource "azurerm_role_assignment" "func_datadog_mid_sta_queue" {
-  principal_id                     = azurerm_user_assigned_identity.func_datadog_mid.principal_id
+resource "azurerm_role_assignment" "func_splunk_mid_sta_queue" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
   scope                            = module.storage_account.id
   role_definition_name             = "Storage Queue Data Contributor"
   skip_service_principal_aad_check = false
 }
 
-resource "azurerm_role_assignment" "func_datadog_mid_sta_table" {
-  principal_id                     = azurerm_user_assigned_identity.func_datadog_mid.principal_id
+resource "azurerm_role_assignment" "func_splunk_mid_sta_table" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
   scope                            = module.storage_account.id
   role_definition_name             = "Storage Table Data Contributor"
   skip_service_principal_aad_check = false
 }
 
-resource "azurerm_role_assignment" "func_datadog_mid_keyvault" {
-  principal_id                     = azurerm_user_assigned_identity.func_datadog_mid.principal_id
+resource "azurerm_role_assignment" "func_splunk_mid_keyvault" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
   scope                            = data.azurerm_key_vault.this.id
   role_definition_name             = "Key Vault Secrets User"
   skip_service_principal_aad_check = false
 }
 
-resource "azurerm_role_assignment" "func_datadog_mid_eventhub" {
-  principal_id                     = azurerm_user_assigned_identity.func_datadog_mid.principal_id
+resource "azurerm_role_assignment" "func_splunk_mid_eventhub" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
   scope                            = azurerm_eventhub_namespace.this.id
   role_definition_name             = "Azure Event Hubs Data Receiver"
   skip_service_principal_aad_check = false
 }
 
 resource "azurerm_linux_function_app" "this" {
-  depends_on                                     = [module.storage_account, azurerm_role_assignment.func_datadog_mid_sta_file, azurerm_role_assignment.func_datadog_mid_sta_queue, azurerm_role_assignment.func_datadog_mid_sta_table, azurerm_role_assignment.func_datadog_mid_keyvault]
+  depends_on                                     = [module.storage_account, azurerm_role_assignment.func_splunk_mid_sta_file, azurerm_role_assignment.func_splunk_mid_sta_queue, azurerm_role_assignment.func_splunk_mid_sta_table, azurerm_role_assignment.func_splunk_mid_keyvault]
   location                                       = var.location
   resource_group_name                            = var.resource_group_name
   name                                           = var.function_app_name
@@ -67,23 +67,23 @@ resource "azurerm_linux_function_app" "this" {
   https_only                                     = true
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.func_datadog_mid.id]
+    identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
-  key_vault_reference_identity_id = azurerm_user_assigned_identity.func_datadog_mid.id
+  key_vault_reference_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
   app_settings = {
     "AzureWebJobsStorage__blobServiceUri" = module.storage_account.endpoints.primary_blob_endpoint
-    "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_datadog_mid.client_id
+    "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "AzureWebJobsStorage__credential"     = "managedidentity"
     "EVHNS__fullyQualifiedNamespace"      = "${var.event_hub.namespace_name}.servicebus.windows.net"
-    "EVHNS__clientId"                     = azurerm_user_assigned_identity.func_datadog_mid.client_id
+    "EVHNS__clientId"                     = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "EVHNS__credential"                   = "managedidentity"
     "EVH__NAME"                           = var.event_hub.hub_name
     "EVH__CONSUMERGROUP"                  = local.function_app_consumer_group
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
     "WEBSITE_RUN_FROM_PACKAGE"            = 1
-    "DD_SITE"                             = var.datadog_site_hostname
-    "DD_API_KEY"                          = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.datadog_api_key.id})"
+    "SPLUNK_HEC_URL"                      = var.splunk_hec_url
+    "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
     "FUNCTIONS_WORKER_RUNTIME"            = "node"
     "FUNCTIONS_EXTENSION_VERSION"         = "~4"
   }

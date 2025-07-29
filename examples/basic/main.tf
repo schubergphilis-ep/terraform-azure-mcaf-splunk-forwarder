@@ -10,34 +10,30 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 2.53.1"
     }
-    datadog = {
-      source  = "datadog/datadog"
-      version = ">= 3.0.0"
-    }
   }
 }
 
-module "datadog_forwarder" {
+module "splunk_forwarder" {
   source = "../../"
 
   location            = "West Europe"
-  resource_group_name = "example-datadogforwarder-rg"
+  resource_group_name = "example-splunkforwarder-rg"
   tags = {
     Environment = "Test"
-    Service     = "DataDog"
+    Service     = "Splunk"
   }
 
-  function_app_name         = "example-datadog-function"
-  application_insights_name = "example-datadog-insights"
-  managed_identity_name     = "datadog-mid"
+  function_app_name         = "example-splunk-function"
+  application_insights_name = "example-splunk-insights"
+  managed_identity_name     = "splunk-mid"
 
   log_analytics_workspace_id = "/resource/path/to/log-analytics-workspace"
 
   event_hub = {
-    namespace_name     = "example-datadog-evhns"
-    hub_name           = "example-datadog-evh"
-    authorization_rule = "datadog-auth"
-    consumer_group     = "datadog-consumer"
+    namespace_name     = "example-splunk-evhns"
+    hub_name           = "example-splunk-evh"
+    authorization_rule = "splunk-auth"
+    consumer_group     = "splunk-consumer"
     sku                = "Premium"
     capacity           = 2
   }
@@ -65,7 +61,7 @@ module "datadog_forwarder" {
     cmk_key_vault_id              = "Resource ID of the Key Vault for containing the CMK"
   }
 
-  ddog_storage_containers = ["storagecontainername"]
+  splunk_storage_containers = ["storagecontainername"]
   event_hub_authorization_rules = {
     sender = {
       listen = false

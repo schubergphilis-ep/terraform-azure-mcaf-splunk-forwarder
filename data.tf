@@ -5,8 +5,8 @@ data "azurerm_key_vault" "this" {
   resource_group_name = var.key_vault.resource_group_name
 }
 
-data "azurerm_key_vault_secret" "datadog_api_key" {
-  name         = var.key_vault_secret_datadog_apikey_name
+data "azurerm_key_vault_secret" "splunk_hec_token" {
+  name         = var.key_vault_secret_splunk_hec_token_name
   key_vault_id = data.azurerm_key_vault.this.id
 }
 
