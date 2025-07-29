@@ -45,7 +45,7 @@ module "storage_account" {
 }
 
 resource "azurerm_storage_container" "this" {
-  for_each              = var.ddog_storage_containers
+  for_each              = var.splunk_storage_containers
   name                  = each.key
   storage_account_id    = module.storage_account.id
   container_access_type = "private"

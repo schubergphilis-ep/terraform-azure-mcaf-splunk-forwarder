@@ -108,7 +108,7 @@ variable "storage_account" {
   default = null
 }
 
-variable "ddog_storage_containers" {
+variable "splunk_storage_containers" {
   description = "Blob Containers to be created in the Storage Account"
   type        = set(string)
 }

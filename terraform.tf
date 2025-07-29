@@ -10,9 +10,5 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 2.53"
     }
-    datadog = {
-      source  = "datadog/datadog"
-      version = "~> 3.0"
-    }
   }
 }
