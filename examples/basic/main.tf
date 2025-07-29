@@ -23,6 +23,8 @@ module "splunk_forwarder" {
     Service     = "Splunk"
   }
 
+
+  splunk_hec_url = ""
   function_app_name         = "example-splunk-function"
   application_insights_name = "example-splunk-insights"
   managed_identity_name     = "splunk-mid"
@@ -52,7 +54,6 @@ module "splunk_forwarder" {
     name                = "Resource ID of the Key Vault"
     resource_group_name = "example-keyvault-rg"
   }
-
   storage_account = {
     name                          = "storageaccountname"
     public_network_access_enabled = false
