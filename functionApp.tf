@@ -96,7 +96,7 @@ resource "azurerm_linux_function_app" "this" {
     application_insights_key               = azurerm_application_insights.appr_appi.instrumentation_key
     vnet_route_all_enabled                 = true
     application_stack {
-      node_version = "20"
+      node_version = "20-lts"
     }
   }
 
