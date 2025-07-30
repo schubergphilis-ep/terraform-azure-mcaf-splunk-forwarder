@@ -84,8 +84,6 @@ resource "azurerm_linux_function_app" "this" {
     "WEBSITE_RUN_FROM_PACKAGE"            = 1
     "SPLUNK_HEC_URL"                      = var.splunk_hec_url
     "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
-    "FUNCTIONS_WORKER_RUNTIME"            = "node"
-    "FUNCTIONS_EXTENSION_VERSION"         = "~4"
   }
   site_config {
     always_on                              = false
@@ -96,7 +94,7 @@ resource "azurerm_linux_function_app" "this" {
     application_insights_key               = azurerm_application_insights.appr_appi.instrumentation_key
     vnet_route_all_enabled                 = true
     application_stack {
-      node_version = "20-lts"
+      node_version = "22"
     }
   }
 
