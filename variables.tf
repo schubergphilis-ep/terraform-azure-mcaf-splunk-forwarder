@@ -124,6 +124,12 @@ variable "event_hub_authorization_rules" {
   )
 }
 
+variable "enable_event_hub_cmk_encryption" {
+  type        = bool
+  description = "Whether or not encryption is enabled on the hub using a CMK"
+  default     = true
+}
+
 variable "event_hub_consumer_groups" {
   description = "Event Hub consumer groups"
   type        = set(string)

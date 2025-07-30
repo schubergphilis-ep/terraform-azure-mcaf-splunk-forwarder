@@ -53,6 +53,8 @@ resource "azurerm_eventhub_namespace" "this" {
 }
 
 resource "azurerm_eventhub_namespace_customer_managed_key" "this" {
+  count =  var.enable_event_hub_cmk_encryption ? 1 : 0
+
   eventhub_namespace_id             = azurerm_eventhub_namespace.this.id
   key_vault_key_ids                 = [data.azurerm_key_vault_key.cmk_encryption_key.id]
   user_assigned_identity_id         = azurerm_user_assigned_identity.ehns_splunk_mid.id
@@ -64,7 +66,7 @@ resource "azurerm_eventhub" "this" {
   namespace_id      = azurerm_eventhub_namespace.this.id
   partition_count   = 4
   message_retention = 7
-  depends_on        = [azurerm_eventhub_namespace_customer_managed_key.this]
+  depends_on        = var.enable_event_hub_cmk_encryption ? [azurerm_eventhub_namespace_customer_managed_key.this[0]] : []
 }
 
 resource "azurerm_eventhub_namespace_authorization_rule" "this" {
