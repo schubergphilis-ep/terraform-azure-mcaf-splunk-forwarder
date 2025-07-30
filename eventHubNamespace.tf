@@ -66,7 +66,7 @@ resource "azurerm_eventhub" "this" {
   namespace_id      = azurerm_eventhub_namespace.this.id
   partition_count   = 4
   message_retention = 7
-  depends_on        = var.enable_event_hub_cmk_encryption ? [azurerm_eventhub_namespace_customer_managed_key.this[0]] : []
+  depends_on        = [azurerm_eventhub_namespace_customer_managed_key.this[0]]
 }
 
 resource "azurerm_eventhub_namespace_authorization_rule" "this" {
