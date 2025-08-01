@@ -53,6 +53,7 @@ variable "function_app" {
   type = object({
     service_plan_id = string
     vnet_subnet_id  = string
+    minimum_tls_version = optional(string, "1.3")
   })
 }
 

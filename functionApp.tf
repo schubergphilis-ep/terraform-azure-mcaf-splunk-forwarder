@@ -89,7 +89,7 @@ resource "azurerm_linux_function_app" "this" {
     always_on                              = false
     http2_enabled                          = true
     ftps_state                             = "Disabled"
-    minimum_tls_version                    = "1.3"
+    minimum_tls_version                    = var.function_app.minimum_tls_version
     application_insights_connection_string = azurerm_application_insights.appr_appi.connection_string
     application_insights_key               = azurerm_application_insights.appr_appi.instrumentation_key
     vnet_route_all_enabled                 = true
