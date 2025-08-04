@@ -94,11 +94,6 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
   }
 
-  always_ready {
-    name           = "${var.function_app_name}-ar"
-    instance_count = 0
-  }
-
   site_config {
     http2_enabled                          = false
     minimum_tls_version                    = var.function_app.minimum_tls_version
