@@ -72,7 +72,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
   https_only                                     = true
   runtime_name                                   = "node"
   runtime_version                                = "22"
-  maximum_instance_count                         = 10
+  maximum_instance_count                         = var.maximum_instance_count
 
   identity {
     type         = "UserAssigned"

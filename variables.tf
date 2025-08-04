@@ -152,3 +152,9 @@ variable "instance_memory_mb" {
   description = "Memory to make available to the function"
   default     = 512
 }
+
+variable "maximum_instance_count" {
+  type        = number
+  description = "Maximum amount of parallel invocations"
+  default     = 40
+}
