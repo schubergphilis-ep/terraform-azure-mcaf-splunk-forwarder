@@ -7,5 +7,5 @@ output "eventhub_namespace_id" {
 }
 
 output "function_app_id" {
-  value = azurerm_linux_function_app.this.id
+  value = azurerm_function_app_flex_consumption.this.id
 }
