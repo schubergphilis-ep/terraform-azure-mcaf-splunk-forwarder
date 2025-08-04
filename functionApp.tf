@@ -52,13 +52,6 @@ resource "azurerm_role_assignment" "func_splunk_mid_eventhub" {
   skip_service_principal_aad_check = false
 }
 
-# resource "azurerm_role_assignment" "deploy_identity_website_contributor" {
-#   principal_id                     = data.azurerm_client_config.current.object_id
-#   scope                            = azurerm_linux_function_app.this.id
-#   role_definition_name             = "Website Contributor"
-#   skip_service_principal_aad_check = false
-# }
-
 resource "azurerm_function_app_flex_consumption" "this" {
   depends_on                                     = [module.storage_account, azurerm_role_assignment.func_splunk_mid_sta_file, azurerm_role_assignment.func_splunk_mid_sta_queue, azurerm_role_assignment.func_splunk_mid_sta_table, azurerm_role_assignment.func_splunk_mid_keyvault]
   location                                       = var.location
@@ -89,9 +82,11 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "EVH__CONSUMERGROUP"                  = local.function_app_consumer_group
     # "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
     # "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
-    "WEBSITE_RUN_FROM_PACKAGE"            = 1
+    # "WEBSITE_RUN_FROM_PACKAGE"            = 1
     "SPLUNK_HEC_URL"                      = var.splunk_hec_url
     "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
+    "DIAGNOSTIC_LOG_HUB_NAME"             = ""
+    "DIAGNOSTIC_LOG_CONSUMER_GROUP"       = ""
   }
 
   site_config {
