@@ -110,7 +110,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
   storage_container_type      = "blobContainer"
   storage_container_endpoint  = "${module.storage_account.endpoints.primary_blob_endpoint}${module.storage_account.name}"
   storage_authentication_type = "UserAssignedIdentity"
-  storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.client_id
+  storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
   # storage_access_key          = azurerm_storage_account.example.primary_access_key
 
   tags = merge(
