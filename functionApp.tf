@@ -52,60 +52,67 @@ resource "azurerm_role_assignment" "func_splunk_mid_eventhub" {
   skip_service_principal_aad_check = false
 }
 
-resource "azurerm_linux_function_app" "this" {
+# resource "azurerm_role_assignment" "deploy_identity_website_contributor" {
+#   principal_id                     = data.azurerm_client_config.current.object_id
+#   scope                            = azurerm_linux_function_app.this.id
+#   role_definition_name             = "Website Contributor"
+#   skip_service_principal_aad_check = false
+# }
+
+resource "azurerm_function_app_flex_consumption" "this" {
   depends_on                                     = [module.storage_account, azurerm_role_assignment.func_splunk_mid_sta_file, azurerm_role_assignment.func_splunk_mid_sta_queue, azurerm_role_assignment.func_splunk_mid_sta_table, azurerm_role_assignment.func_splunk_mid_keyvault]
   location                                       = var.location
   resource_group_name                            = var.resource_group_name
   name                                           = var.function_app_name
   service_plan_id                                = var.function_app.service_plan_id
   virtual_network_subnet_id                      = var.function_app.vnet_subnet_id
-  storage_account_name                           = module.storage_account.name
-  storage_uses_managed_identity                  = true
-  ftp_publish_basic_authentication_enabled       = false
+  instance_memory_in_mb                          = var.instance_memory_mb
   webdeploy_publish_basic_authentication_enabled = false
   public_network_access_enabled                  = false
   https_only                                     = true
+  runtime_name                                   = "node"
+  runtime_version                                = "22"
+  maximum_instance_count                         = 10
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
-  key_vault_reference_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
   app_settings = {
-    "AzureWebJobsStorage__blobServiceUri" = module.storage_account.endpoints.primary_blob_endpoint
-    "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    "AzureWebJobsStorage__credential"     = "managedidentity"
+    # "AzureWebJobsStorage__blobServiceUri" = module.storage_account.endpoints.primary_blob_endpoint
+    # "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    # "AzureWebJobsStorage__credential"     = "managedidentity"
     "EVHNS__fullyQualifiedNamespace"      = "${var.event_hub.namespace_name}.servicebus.windows.net"
     "EVHNS__clientId"                     = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "EVHNS__credential"                   = "managedidentity"
     "EVH__NAME"                           = var.event_hub.hub_name
     "EVH__CONSUMERGROUP"                  = local.function_app_consumer_group
-    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
-    "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
+    # "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
+    # "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
     "WEBSITE_RUN_FROM_PACKAGE"            = 1
     "SPLUNK_HEC_URL"                      = var.splunk_hec_url
     "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
   }
+
+  always_ready {
+    name           = "${var.function_app_name}-ar"
+    instance_count = 0
+  }
+
   site_config {
-    always_on                              = false
-    http2_enabled                          = true
-    ftps_state                             = "Disabled"
+    http2_enabled                          = false
     minimum_tls_version                    = var.function_app.minimum_tls_version
     application_insights_connection_string = azurerm_application_insights.appr_appi.connection_string
     application_insights_key               = azurerm_application_insights.appr_appi.instrumentation_key
     vnet_route_all_enabled                 = true
-    application_stack {
-      node_version = "22"
-    }
   }
 
+  storage_container_type      = "blobContainer"
+  storage_container_endpoint  = "${module.storage_account.primary_blob_endpoint}${module.storage_account.name}"
+  storage_authentication_type = "UserAssignedIdentity"
+  storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.client_id
+  # storage_access_key          = azurerm_storage_account.example.primary_access_key
 
-  storage_account {
-    account_name = module.storage_account.name
-    name         = module.storage_account.name
-    type         = "AzureBlob"
-    share_name   = "functionapp"
-    access_key   = module.storage_account.access_keys.primary
-  }
   tags = merge(
     try(var.tags),
     tomap({

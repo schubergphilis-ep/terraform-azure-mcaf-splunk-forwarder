@@ -51,8 +51,8 @@ variable "event_hub_namespace" {
 variable "function_app" {
   description = "The parameters to be used for the Function App deployment. Inludes the ID of the App Service Plan to be used and the ID of the subent for regional VNET integration"
   type = object({
-    service_plan_id = string
-    vnet_subnet_id  = string
+    service_plan_id     = string
+    vnet_subnet_id      = string
     minimum_tls_version = optional(string, "1.3")
   })
 }
@@ -145,4 +145,10 @@ variable "windows_azure_security_resource_provider_id" {
 variable "log_analytics_workspace_id" {
   type        = string
   description = "The resource id of the log analytics workspace to which application insights logs should be sent"
+}
+
+variable "instance_memory_mb" {
+  type        = number
+  description = "Memory to make available to the function"
+  default     = 512
 }
