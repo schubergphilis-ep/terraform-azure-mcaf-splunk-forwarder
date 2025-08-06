@@ -9,3 +9,7 @@ output "eventhub_namespace_id" {
 output "function_app_id" {
   value = azurerm_function_app_flex_consumption.this.id
 }
+
+output "application_insights_id" {
+  value = azurerm_application_insights.appr_appi.id
+}
