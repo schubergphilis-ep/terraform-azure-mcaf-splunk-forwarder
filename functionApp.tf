@@ -82,7 +82,6 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "EVH__CONSUMERGROUP"                  = local.function_app_consumer_group
     # "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
     # "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
-    "WEBSITE_RUN_FROM_PACKAGE"            = 1
     "SPLUNK_HEC_URL"                      = var.splunk_hec_url
     "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
     "DIAGNOSTIC_LOG_HUB_NAME"             = ""
