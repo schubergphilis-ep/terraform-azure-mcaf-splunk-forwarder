@@ -72,20 +72,33 @@ resource "azurerm_function_app_flex_consumption" "this" {
     identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
   app_settings = {
-    "AzureWebJobsStorage__accountName"    = module.storage_account.name
-    "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    "AzureWebJobsStorage__credential"     = "managedidentity"
-    "EVHNS__fullyQualifiedNamespace"      = "${var.event_hub.namespace_name}.servicebus.windows.net"
-    "EVHNS__clientId"                     = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    "EVHNS__credential"                   = "managedidentity"
-    "EVH__NAME"                           = var.event_hub.hub_name
-    "EVH__CONSUMERGROUP"                  = local.function_app_consumer_group
-    # "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
-    # "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
-    "SPLUNK_HEC_URL"                      = var.splunk_hec_url
-    "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
-    "DIAGNOSTIC_LOG_HUB_NAME"             = ""
-    "DIAGNOSTIC_LOG_CONSUMER_GROUP"       = ""
+    "AzureWebJobsStorage__accountName" = module.storage_account.name
+    "AzureWebJobsStorage__clientId"    = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    "AzureWebJobsStorage__credential"  = "managedidentity"
+    "EVHNS__fullyQualifiedNamespace"   = "${var.event_hub.namespace_name}.servicebus.windows.net"
+    "EVHNS__clientId"                  = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    "EVHNS__credential"                = "managedidentity"
+    "SPLUNK_HEC_URL"                   = var.splunk_hec_url
+    "SPLUNK_HEC_TOKEN"                 = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
+
+    "AAD_LOG_HUB_NAME"                                = var.event_hub.hub_name
+    "AAD_LOG_CONSUMER_GROUP"                          = "aad_log"
+    "AAD_LOG_SOURCETYPE"                              = "entra_log"
+    "AAD_NON_INTERACTIVE_SIGNIN_LOG_HUB_NAME"         = var.event_hub.hub_name
+    "AAD_NON_INTERACTIVE_SIGNIN_LOG_CONSUMER_GROUP"   = "non_interative_signin_log"
+    "AAD_NON_INTERACTIVE_SIGNIN_LOG_SOURCETYPE"       = "entra_log"
+    "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_HUB_NAME"       = var.event_hub.hub_name
+    "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_CONSUMER_GROUP" = "service_principal_signin_log"
+    "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_SOURCETYPE"     = "entra_log"
+    "ACTIVITY_LOG_HUB_NAME"                           = var.event_hub.hub_name
+    "ACTIVITY_LOG_HUB_CONSUMER_GROUP"                 = "activity_log"
+    "ACTIVITY_LOG_HUB_SOURCETYPE"                     = "azure_activity_log"
+    "DIAGNOSTIC_LOG_HUB_NAME"                         = var.event_hub.hub_name
+    "DIAGNOSTIC_LOG_CONSUMER_GROUP"                   = "diagnostic_log"
+    "DIAGNOSTIC_LOG_SOURCETYPE"                       = "azure_diagnostic_log"
+    "METRICS_LOG_HUB_NAME"                            = var.event_hub.hub_name
+    "METRICS_LOG_HUB_CONSUMER_GROUP"                  = "metrics_log"
+    "METRICS_LOG_HUB_SOURCETYPE"                      = "azure_metrics_log"
   }
 
   site_config {
@@ -96,9 +109,9 @@ resource "azurerm_function_app_flex_consumption" "this" {
     vnet_route_all_enabled                 = true
   }
 
-  storage_container_type      = "blobContainer"
-  storage_container_endpoint  = "${module.storage_account.endpoints.primary_blob_endpoint}${module.storage_account.name}"
-  storage_authentication_type = "UserAssignedIdentity"
+  storage_container_type            = "blobContainer"
+  storage_container_endpoint        = "${module.storage_account.endpoints.primary_blob_endpoint}${module.storage_account.name}"
+  storage_authentication_type       = "UserAssignedIdentity"
   storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
   # storage_authentication_type = "StorageAccountConnectionString"
   # storage_access_key          = module.storage_account.access_keys.primary
