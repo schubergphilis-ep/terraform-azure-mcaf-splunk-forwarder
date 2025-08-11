@@ -73,8 +73,8 @@ resource "azurerm_function_app_flex_consumption" "this" {
   }
   app_settings = {
     "AzureWebJobsStorage__accountName"    = module.storage_account.name
-    "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    "AzureWebJobsStorage__credential"     = "managedidentity"
+    # "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    # "AzureWebJobsStorage__credential"     = "managedidentity"
     "EVHNS__fullyQualifiedNamespace"      = "${var.event_hub.namespace_name}.servicebus.windows.net"
     "EVHNS__clientId"                     = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "EVHNS__credential"                   = "managedidentity"
@@ -99,9 +99,10 @@ resource "azurerm_function_app_flex_consumption" "this" {
 
   storage_container_type      = "blobContainer"
   storage_container_endpoint  = "${module.storage_account.endpoints.primary_blob_endpoint}${module.storage_account.name}"
-  storage_authentication_type = "UserAssignedIdentity"
-  storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
-  # storage_access_key          = azurerm_storage_account.example.primary_access_key
+  # storage_authentication_type = "UserAssignedIdentity"
+  # storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
+  storage_authentication_type = "StorageAccountConnectionString"
+  storage_access_key          = module.storage_account.access_keys.primary
 
   tags = merge(
     try(var.tags),
