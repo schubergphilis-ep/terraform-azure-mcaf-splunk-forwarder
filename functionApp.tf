@@ -73,8 +73,8 @@ resource "azurerm_function_app_flex_consumption" "this" {
   }
   app_settings = {
     "AzureWebJobsStorage__accountName"    = module.storage_account.name
-    # "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    # "AzureWebJobsStorage__credential"     = "managedidentity"
+    "AzureWebJobsStorage__clientId"       = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    "AzureWebJobsStorage__credential"     = "managedidentity"
     "EVHNS__fullyQualifiedNamespace"      = "${var.event_hub.namespace_name}.servicebus.windows.net"
     "EVHNS__clientId"                     = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "EVHNS__credential"                   = "managedidentity"
@@ -82,7 +82,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "EVH__CONSUMERGROUP"                  = local.function_app_consumer_group
     # "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = true
     # "WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = true
-    # "WEBSITE_RUN_FROM_PACKAGE"            = 1
+    "WEBSITE_RUN_FROM_PACKAGE"            = 1
     "SPLUNK_HEC_URL"                      = var.splunk_hec_url
     "SPLUNK_HEC_TOKEN"                    = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
     "DIAGNOSTIC_LOG_HUB_NAME"             = ""
@@ -99,10 +99,10 @@ resource "azurerm_function_app_flex_consumption" "this" {
 
   storage_container_type      = "blobContainer"
   storage_container_endpoint  = "${module.storage_account.endpoints.primary_blob_endpoint}${module.storage_account.name}"
-  # storage_authentication_type = "UserAssignedIdentity"
-  # storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
-  storage_authentication_type = "StorageAccountConnectionString"
-  storage_access_key          = module.storage_account.access_keys.primary
+  storage_authentication_type = "UserAssignedIdentity"
+  storage_user_assigned_identity_id = azurerm_user_assigned_identity.func_splunk_mid.id
+  # storage_authentication_type = "StorageAccountConnectionString"
+  # storage_access_key          = module.storage_account.access_keys.primary
 
   tags = merge(
     try(var.tags),
