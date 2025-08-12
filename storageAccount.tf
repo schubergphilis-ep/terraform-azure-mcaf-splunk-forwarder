@@ -43,7 +43,8 @@ module "storage_account" {
     })
   )
   network_configuration = {
-    ip_rules = try(var.storage_account.allowed_ips)
+    public_network_access_enabled = length(var.storage_account.allowed_ips) > 0 ? true : false
+    ip_rules                      = var.storage_account.allowed_ips
   }
 }
 
