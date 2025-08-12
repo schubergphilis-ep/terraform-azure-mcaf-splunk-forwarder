@@ -42,6 +42,9 @@ module "storage_account" {
       "Resource Type" = "Storage Account"
     })
   )
+  network_configuration = {
+    ip_rules = try(var.allowed_ips)
+  }
 }
 
 resource "azurerm_storage_container" "this" {

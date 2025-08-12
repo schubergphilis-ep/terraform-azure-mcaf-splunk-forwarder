@@ -87,6 +87,7 @@ variable "storage_account" {
   type = object({
     name                              = string
     public_network_access_enabled     = optional(bool, false)
+    allowed_ips                       = optional(set(string), [])
     account_tier                      = optional(string, "Standard")
     account_replication_type          = optional(string, "ZRS")
     access_tier                       = optional(string, "Hot")
