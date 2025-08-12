@@ -43,7 +43,7 @@ module "storage_account" {
     })
   )
   network_configuration = {
-    ip_rules = try(var.allowed_ips)
+    ip_rules = try(var.storage_account.allowed_ips)
   }
 }
 
