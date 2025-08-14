@@ -92,14 +92,14 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_CONSUMER_GROUP" = "sp_signin_log"
     "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_SOURCETYPE"     = "entra_log"
     "ACTIVITY_LOG_HUB_NAME"                           = var.event_hub.hub_name
-    "ACTIVITY_LOG_HUB_CONSUMER_GROUP"                 = "activity_log"
-    "ACTIVITY_LOG_HUB_SOURCETYPE"                     = "azure_activity_log"
+    "ACTIVITY_LOG_CONSUMER_GROUP"                     = "activity_log"
+    "ACTIVITY_LOG_SOURCETYPE"                         = "azure_activity_log"
     "DIAGNOSTIC_LOG_HUB_NAME"                         = var.event_hub.hub_name
     "DIAGNOSTIC_LOG_CONSUMER_GROUP"                   = "diagnostic_log"
     "DIAGNOSTIC_LOG_SOURCETYPE"                       = "azure_diagnostic_log"
     "METRICS_LOG_HUB_NAME"                            = var.event_hub.hub_name
-    "METRICS_LOG_HUB_CONSUMER_GROUP"                  = "metrics_log"
-    "METRICS_LOG_HUB_SOURCETYPE"                      = "azure_metrics_log"
+    "METRICS_LOG_CONSUMER_GROUP"                      = "metrics_log"
+    "METRICS_LOG_SOURCETYPE"                          = "azure_metrics_log"
   }
 
   site_config {
