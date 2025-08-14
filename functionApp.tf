@@ -72,7 +72,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
   app_settings = {
-    "AzureWebJobsStorage" = ""
+    "AzureWebJobsStorage"              = ""
     "AzureWebJobsStorage__accountName" = module.storage_account.name
     "EVHNS__fullyQualifiedNamespace"   = "${var.event_hub.namespace_name}.servicebus.windows.net"
     "EVHNS__clientId"                  = azurerm_user_assigned_identity.func_splunk_mid.client_id
