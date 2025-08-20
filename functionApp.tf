@@ -72,10 +72,11 @@ resource "azurerm_function_app_flex_consumption" "this" {
     identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
   app_settings = {
-    "AzureWebJobsStorage" = ""
-    "AzureWebJobsStorage__accountName" = module.storage_account.name
-    "AzureWebJobsStorage__clientId"    = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    "AzureWebJobsStorage__credential"  = "ManagedIdentity"
+    "AzureWebJobsStorage__blobServiceUri"  = module.storage_account.endpoints.primary_blob_endpoint
+    "AzureWebJobsStorage__queueServiceUri" = module.storage_account.endpoints.primary_queue_endpoint
+    "AzureWebJobsStorage__tableServiceUri" = module.storage_account.endpoints.primary_table_endpoint
+    "AzureWebJobsStorage__fileServiceUri"  = module.storage_account.endpoints.primary_file_endpoint
+
     "EVHNS__fullyQualifiedNamespace"   = "${var.event_hub.namespace_name}.servicebus.windows.net"
     "EVHNS__clientId"                  = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "EVHNS__credential"                = "ManagedIdentity"
