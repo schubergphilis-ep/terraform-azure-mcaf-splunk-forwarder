@@ -53,7 +53,7 @@ resource "azurerm_role_assignment" "func_splunk_mid_eventhub" {
 }
 
 resource "azurerm_function_app_flex_consumption" "this" {
-  depends_on                                     = [module.storage_account, azurerm_role_assignment.func_splunk_mid_sta_file, azurerm_role_assignment.func_splunk_mid_sta_queue, azurerm_role_assignment.func_splunk_mid_sta_table, azurerm_role_assignment.func_splunk_mid_keyvault]
+  depends_on                                     = [azurerm_role_assignment.func_splunk_mid_sta_file, azurerm_role_assignment.func_splunk_mid_sta_queue, azurerm_role_assignment.func_splunk_mid_sta_table, azurerm_role_assignment.func_splunk_mid_keyvault]
   location                                       = var.location
   resource_group_name                            = var.resource_group_name
   name                                           = var.function_app_name
@@ -72,6 +72,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
   app_settings = {
+    "AzureWebJobsStorage"                  = ""
     "AzureWebJobsStorage__blobServiceUri"  = module.storage_account.endpoints.primary_blob_endpoint
     "AzureWebJobsStorage__queueServiceUri" = module.storage_account.endpoints.primary_queue_endpoint
     "AzureWebJobsStorage__tableServiceUri" = module.storage_account.endpoints.primary_table_endpoint
