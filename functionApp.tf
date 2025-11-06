@@ -86,22 +86,22 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "SPLUNK_HEC_TOKEN"                 = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
 
     "AAD_LOG_HUB_NAME"                                = var.event_hub.hub_name
-    "AAD_LOG_CONSUMER_GROUP"                          = "aad_log"
+    "AAD_LOG_CONSUMER_GROUP"                          = "${var.event_hub.hub_name}cg-aad_log"
     "AAD_LOG_SOURCETYPE"                              = "entra_log"
     "AAD_NON_INTERACTIVE_SIGNIN_LOG_HUB_NAME"         = var.event_hub.hub_name
-    "AAD_NON_INTERACTIVE_SIGNIN_LOG_CONSUMER_GROUP"   = "ni_signin_log"
+    "AAD_NON_INTERACTIVE_SIGNIN_LOG_CONSUMER_GROUP"   = "${var.event_hub.hub_name}cg-ni_signin_log"
     "AAD_NON_INTERACTIVE_SIGNIN_LOG_SOURCETYPE"       = "entra_log"
     "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_HUB_NAME"       = var.event_hub.hub_name
-    "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_CONSUMER_GROUP" = "sp_signin_log"
+    "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_CONSUMER_GROUP" = "${var.event_hub.hub_name}cg-sp_signin_log"
     "AAD_SERVICE_PRINCIPAL_SIGNIN_LOG_SOURCETYPE"     = "entra_log"
     "ACTIVITY_LOG_HUB_NAME"                           = var.event_hub.hub_name
-    "ACTIVITY_LOG_CONSUMER_GROUP"                     = "activity_log"
+    "ACTIVITY_LOG_CONSUMER_GROUP"                     = "${var.event_hub.hub_name}cg-activity_log"
     "ACTIVITY_LOG_SOURCETYPE"                         = "azure_activity_log"
     "DIAGNOSTIC_LOG_HUB_NAME"                         = var.event_hub.hub_name
-    "DIAGNOSTIC_LOG_CONSUMER_GROUP"                   = "diagnostic_log"
+    "DIAGNOSTIC_LOG_CONSUMER_GROUP"                   = "${var.event_hub.hub_name}cg-diagnostic_log"
     "DIAGNOSTIC_LOG_SOURCETYPE"                       = "azure_diagnostic_log"
     "METRICS_LOG_HUB_NAME"                            = var.event_hub.hub_name
-    "METRICS_LOG_CONSUMER_GROUP"                      = "metrics_log"
+    "METRICS_LOG_CONSUMER_GROUP"                      = "${var.event_hub.hub_name}cg-metrics_log"
     "METRICS_LOG_SOURCETYPE"                          = "azure_metrics_log"
   }
 
