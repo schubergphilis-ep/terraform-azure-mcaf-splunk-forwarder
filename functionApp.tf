@@ -72,6 +72,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     identity_ids = [azurerm_user_assigned_identity.func_splunk_mid.id]
   }
   app_settings = {
+    # https://github.com/hashicorp/terraform-provider-azurerm/issues/30732 open issue and we need to set an empty variable to properly use the managed identity
     "AzureWebJobsStorage"                  = ""
     "AzureWebJobsStorage__blobServiceUri"  = module.storage_account.endpoints.primary_blob_endpoint
     "AzureWebJobsStorage__queueServiceUri" = module.storage_account.endpoints.primary_queue_endpoint
