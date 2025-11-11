@@ -89,9 +89,10 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "AzureWebJobsStorage__clientId"        = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "AzureWebJobsStorage__accountName"     = module.storage_account.name
 
-    "EVHNS__fullyQualifiedNamespace"   = "${var.event_hub.namespace_name}.servicebus.windows.net"
-    "EVHNS__clientId"                  = azurerm_user_assigned_identity.func_splunk_mid.client_id
-    "EVHNS__credential"                = "ManagedIdentity"
+    "EventHubConnection__fullyQualifiedNamespace" = "${var.event_hub.namespace_name}.servicebus.windows.net"
+    "EventHubConnection__clientId"                = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    "EventHubConnection__credential"              = "managedidentity"
+
     "SPLUNK_HEC_URL"                   = var.splunk_hec_url
     "SPLUNK_HEC_TOKEN"                 = "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_hec_token.id})"
 
