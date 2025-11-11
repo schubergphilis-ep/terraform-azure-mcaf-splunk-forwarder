@@ -71,7 +71,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
   public_network_access_enabled                  = false
   https_only                                     = true
   runtime_name                                   = "node"
-  runtime_version                                = "20"
+  runtime_version                                = "22"
   maximum_instance_count                         = var.maximum_instance_count
 
   identity {
