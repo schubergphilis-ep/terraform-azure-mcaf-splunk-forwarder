@@ -52,6 +52,13 @@ resource "azurerm_role_assignment" "func_splunk_mid_eventhub" {
   skip_service_principal_aad_check = false
 }
 
+resource "azurerm_role_assignment" "func_splunk_mid_eventhub_owner" {
+  principal_id                     = azurerm_user_assigned_identity.func_splunk_mid.principal_id
+  scope                            = azurerm_eventhub_namespace.this.id
+  role_definition_name             = "Azure Event Hubs Data Owner"
+  skip_service_principal_aad_check = false
+}
+
 resource "azurerm_function_app_flex_consumption" "this" {
   depends_on                                     = [azurerm_role_assignment.func_splunk_mid_sta_file, azurerm_role_assignment.func_splunk_mid_sta_queue, azurerm_role_assignment.func_splunk_mid_sta_table, azurerm_role_assignment.func_splunk_mid_keyvault]
   location                                       = var.location
