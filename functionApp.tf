@@ -78,6 +78,9 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "AzureWebJobsStorage__queueServiceUri" = module.storage_account.endpoints.primary_queue_endpoint
     "AzureWebJobsStorage__tableServiceUri" = module.storage_account.endpoints.primary_table_endpoint
     "AzureWebJobsStorage__fileServiceUri"  = module.storage_account.endpoints.primary_file_endpoint
+    "AzureWebJobsStorage__credential"      = "ManagedIdentity"
+    "AzureWebJobsStorage__clientId"        = azurerm_user_assigned_identity.func_splunk_mid.client_id
+    "AzureWebJobsStorage__accountName"     = module.storage_account.name
 
     "EVHNS__fullyQualifiedNamespace"   = "${var.event_hub.namespace_name}.servicebus.windows.net"
     "EVHNS__clientId"                  = azurerm_user_assigned_identity.func_splunk_mid.client_id
