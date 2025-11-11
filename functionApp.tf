@@ -89,7 +89,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "AzureWebJobsStorage__clientId"        = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "AzureWebJobsStorage__accountName"     = module.storage_account.name
 
-    "EventHubConnection__fullyQualifiedNamespace" = "${var.event_hub.namespace_name}.servicebus.windows.net"
+    "EventHubConnection__fullyQualifiedNamespace" = "${var.event_hub.namespace_name}.privatelink.servicebus.windows.net"
     "EventHubConnection__clientId"                = azurerm_user_assigned_identity.func_splunk_mid.client_id
     "EventHubConnection__credential"              = "managedidentity"
 
