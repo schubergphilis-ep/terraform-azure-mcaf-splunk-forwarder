@@ -80,7 +80,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
   }
   app_settings = {
     # https://github.com/hashicorp/terraform-provider-azurerm/issues/30732 open issue and we need to set an empty variable to properly use the managed identity
-    "AzureWebJobsStorage"                  = ""
+    # "AzureWebJobsStorage"                  = ""
     "AzureWebJobsStorage__blobServiceUri"  = module.storage_account.endpoints.primary_blob_endpoint
     "AzureWebJobsStorage__queueServiceUri" = module.storage_account.endpoints.primary_queue_endpoint
     "AzureWebJobsStorage__tableServiceUri" = module.storage_account.endpoints.primary_table_endpoint
@@ -114,7 +114,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "METRICS_LOG_HUB_NAME"                            = var.event_hub.hub_name
     "METRICS_LOG_CONSUMER_GROUP"                      = "${var.event_hub.hub_name}cg-metrics_log"
     "METRICS_LOG_SOURCETYPE"                          = "azure_metrics_log"
-    "CUSTOM_TRUSTED_CA_BASE64"                        = var.splunk_custom_ca_id != null ? "@Microsoft.KeyVault(SecretUri=${var.splunk_custom_ca_id})" : ""
+    "CUSTOM_TRUSTED_CA"                               = var.splunk_custom_ca_id != null ? "@Microsoft.KeyVault(SecretUri=${var.splunk_custom_ca_id})" : ""
   }
 
   site_config {
