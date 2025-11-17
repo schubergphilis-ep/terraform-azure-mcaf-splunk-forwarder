@@ -77,6 +77,12 @@ variable "splunk_hec_url" {
   type        = string
 }
 
+variable "splunk_custom_ca" {
+  description = "Custom CA to trust for the splunk connection if required"
+  type        = string
+  default     = null
+}
+
 variable "key_vault_secret_cmk_key_name" {
   type    = string
   default = "cmkrsa"
