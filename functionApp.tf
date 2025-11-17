@@ -154,6 +154,6 @@ resource "azurerm_application_insights" "appr_appi" {
   )
   workspace_id = var.log_analytics_workspace_id
 
-  internet_ingestion_enabled = false
-  internet_query_enabled     = false
+  internet_ingestion_enabled = true
+  internet_query_enabled     = true
 }
