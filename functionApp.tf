@@ -114,6 +114,7 @@ resource "azurerm_function_app_flex_consumption" "this" {
     "METRICS_LOG_HUB_NAME"                            = var.event_hub.hub_name
     "METRICS_LOG_CONSUMER_GROUP"                      = "${var.event_hub.hub_name}cg-metrics_log"
     "METRICS_LOG_SOURCETYPE"                          = "azure_metrics_log"
+    "CUSTOM_TRUSTED_CA_BASE64"                        = var.splunk_custom_ca != null ? "@Microsoft.KeyVault(SecretUri=${data.azurerm_key_vault_secret.splunk_custom_ca[0].id})" : ""
   }
 
   site_config {
