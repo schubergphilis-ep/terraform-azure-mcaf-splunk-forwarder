@@ -77,7 +77,7 @@ variable "splunk_hec_url" {
   type        = string
 }
 
-variable "splunk_custom_ca" {
+variable "splunk_custom_ca_id" {
   description = "Custom CA to trust for the splunk connection if required"
   type        = string
   default     = null
